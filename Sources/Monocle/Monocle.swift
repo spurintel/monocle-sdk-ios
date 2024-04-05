@@ -40,6 +40,7 @@ public class Monocle {
         plugins = [
             MonoclePlugin(v: "0.0.1", t: "iOS", s: installID.uuidString, tk: token, config: DnsResolverPlugin.dnsResolverMonoclePluginConfig),
             MonoclePlugin(v: "0.0.1", t: "iOS", s: installID.uuidString, tk: token, config: DeviceInfoPlugin.deviceInfoPluginConfig),
+            MonoclePlugin(v: "0.0.1", t: "iOS", s: installID.uuidString, tk: token, config: LocationPlugin.locationPluginConfig),
         ]
     }
     
