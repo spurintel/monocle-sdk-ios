@@ -3,7 +3,7 @@ import CoreLocation
 struct LocationData: Codable {
     let latitude: Double
     let longitude: Double
-    let locationTimestamp: Date?
+    let locationTimestamp: String?
 }
 
 class LocationPlugin {
@@ -21,19 +21,28 @@ class LocationPlugin {
 
                 // We can't get the location, return an error
                 if location == nil {
-                    return LocationData(latitude: 0, longitude: 0)
+                    return LocationData(latitude: 0, longitude: 0, locationTimestamp: nil)
                 } else {
+                    let timestamp = rfc3339Formatted(date: location?.timestamp ?? Date())
                     return LocationData(
                             latitude: location?.coordinate.latitude ?? 0,
-                            longitude: location?.coordinate.longitude ?? 0
-                            locationTimestamp: location?.timestamp
+                            longitude: location?.coordinate.longitude ?? 0,
+                            locationTimestamp: timestamp
                     )
                 }
             default:
-                return LocationData(latitude: 0, longitude: 0)
+                return LocationData(latitude: 0, longitude: 0, locationTimestamp: nil)
             }
         } else {
-            return LocationData(latitude: 0, longitude: 0)
+            return LocationData(latitude: 0, longitude: 0, locationTimestamp: nil)
         }
+    }
+
+    static func rfc3339Formatted(date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter.string(from: date)
     }
 }
