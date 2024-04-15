@@ -91,9 +91,6 @@ class MonoclePlugin {
 
 func serialize(data: Codable) -> String {
     let encoder = JSONEncoder()
-    // Configure the encoder if you have specific formatting requirements
-    encoder.outputFormatting = .prettyPrinted // Optional: Makes the JSON easier to read
-    
     do {
         let jsonData = try encoder.encode(data)
         if let jsonString = String(data: jsonData, encoding: .utf8) {

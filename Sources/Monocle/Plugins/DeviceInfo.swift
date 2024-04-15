@@ -20,7 +20,7 @@ struct DeviceInformation: Codable {
 }
 
 class DeviceInfoPlugin {
-    static let deviceInfoPluginConfig = MonoclePluginConfig(pid: "p/di", version: 1, execute: gatherDeviceInformation)
+    static let deviceInfoPluginConfig = MonoclePluginConfig(pid: "p/dios", version: 1, execute: gatherDeviceInformation)
     
     static func gatherDeviceInformation() async -> DeviceInformation {
         // First, asynchronously get the network type

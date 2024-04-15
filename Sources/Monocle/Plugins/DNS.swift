@@ -8,7 +8,6 @@ struct ResolverPluginStub: Codable {
     var dns: String?
 }
 
-// Assuming MonoclePlugin exists and can be initialized with a similar configuration pattern as in TypeScript
 class DnsResolverPlugin: MonoclePlugin {
     static let dnsResolverMonoclePluginConfig = MonoclePluginConfig(pid: "p/dr", version: 1, execute: execute)
     
