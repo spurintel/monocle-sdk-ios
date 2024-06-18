@@ -56,7 +56,7 @@ This example includes collecting host telemetry and geolocation in addition to t
 * [Monocle iOS Example App](https://github.com/spurintel/monocle-example-ios)
 
 # Docs
-* [Monocle Docs](https://docs.spur.us/monocle
+* [Monocle Docs](https://docs.spur.us/monocle)
 
 ## FAQ
 
