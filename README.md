@@ -2,13 +2,13 @@
 
 This repository provides a Swift software development kit implementing [Monocle](https://spur.us/monocle/) in iOS.  
 
-# Prerequisites
+## Prerequisites
 * Xcode - Tested up to Xcode v15.4
 * iOS - Emulated in Xcode or physical device tested up to iOS v17.5.
 * Spur account - https://app.spur.us/start/create-account
 * Monocle Site Token - https://app.spur.us/monocle
 
-# Implementation
+## Implementation
 1. In the target Xcode iOS Swift project, add a package dependency for [this repository](https://github.com/spurintel/monocle-sdk-ios), with a dependency rule of the `main` branch.
 2. import the `Monocle` package in a Swift source file 
 3. Get a Monocle **site-token** from the [Monocle management interface](https://app.spur.us/monocle)
@@ -17,7 +17,7 @@ This repository provides a Swift software development kit implementing [Monocle]
 6. Call `Monocle.shared.assess()` to load and run the assessment.
 7. Pass the resulting assessment to your [backend integration](https://docs.spur.us/monocle?id=backend-integration).
 
-# Quick start example
+## Quick start example
 ```swift
 import SwiftUI
 import Monocle
@@ -51,11 +51,11 @@ struct ContentView_Previews: PreviewProvider {
 }
 ```
 
-# Full example app
+## Example app
 This example includes collecting host telemetry and geolocation in addition to the Monocle assessment, and provides better UI elements and error handling.
 * [Monocle iOS Example App](https://github.com/spurintel/monocle-example-ios)
 
-# Docs
+## Docs
 * [Monocle Docs](https://docs.spur.us/monocle)
 
 ## FAQ
