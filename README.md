@@ -1,8 +1,8 @@
 # Monocle iOS SDK
 
-This repository provides a Swift software development kit implementing [Monocle](https://spur.us/monocle/) in iOS.  
+This repository provides a Swift software development kit implementing [Monocle](https://spur.us/monocle) in iOS.  
 
-[SDK interface docs](https://spurintel.github.io/monocle-sdk-ios/)
+[SDK interface docs](https://spurintel.github.io/monocle-sdk-ios/documentation/monocle)
 
 ## Prerequisites
 * Xcode - Tested up to Xcode v15.4
