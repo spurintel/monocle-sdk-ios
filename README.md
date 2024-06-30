@@ -2,6 +2,8 @@
 
 This repository provides a Swift software development kit implementing [Monocle](https://spur.us/monocle/) in iOS.  
 
+[SDK interface docs](https://spurintel.github.io/monocle-sdk-ios/)
+
 ## Prerequisites
 * Xcode - Tested up to Xcode v15.4
 * iOS - Emulated in Xcode or physical device tested up to iOS v17.5.
@@ -58,6 +60,17 @@ This example includes collecting host telemetry and geolocation in addition to t
 ## Docs
 * [Monocle Docs](https://docs.spur.us/monocle)
 
+## Swift Docs
+
+API Docs can be generated from XCode under Product > Build Documentation.  This will produce `Monocle.doccarchive` which will load in XCode and populate context documentation in the editor.
+
+Converting this archive to regular HTML can be achieved with the command line:
+```sh
+$(xcrun --find docc) process-archive transform-for-static-hosting Monocle.doccarchive --output-path docs --hosting-base-path /monocle-sdk-ios
+```
+
+HTML docs have been pre-built and included in this repo.
+
 ## FAQ
 
 ### Can't I just use the native Swift network state APIs to determine if the device is on a VPN?
@@ -69,3 +82,4 @@ This example includes collecting host telemetry and geolocation in addition to t
 
 ### What about Flutter or ReactNative or other frameworks?
    Monocle is lightweight and should work on any platform that can execute Javascript in the client and make standard HTTPS GETs/POSTs, but it is untested at this time.  Please let us know if you try it.
+

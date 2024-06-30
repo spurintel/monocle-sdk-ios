@@ -3,6 +3,9 @@ import UIKit
 
 public typealias EncryptedAssessment = String
 
+/// Monocle configuration
+/// - Parameters:
+///   -    token: Monocle site-token String unique to your deployment. From https://app.spur.us/monocle
 public struct MonocleConfig {
     public let token: String
     
@@ -15,6 +18,11 @@ public struct AssessmentResponse: Codable {
     public let data: EncryptedAssessment?
     public let status: String
 }
+
+/// Monocle class
+///  - Parameters:
+///    - config: MonocleConfig object instantiated with a site-token
+///  - Returns: AssessmentResponse object
 
 public class Monocle {
     public static let shared: Monocle = Monocle()
