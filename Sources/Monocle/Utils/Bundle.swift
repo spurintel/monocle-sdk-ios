@@ -21,7 +21,7 @@ class BundlePoster {
     }
     
     func postBundle(jsonBody: String) async -> Result<String, BundlePosterError> {
-        guard let url = URL(string: "https://mcl.spur.dev/r/bundle?v=\(v)&t=\(t)&s=\(s)&tk=\(tk)") else {
+        guard let url = URL(string: "https://mcl.spur.us/r/bundle?v=\(v)&t=\(t)&s=\(s)&tk=\(tk)") else {
             return .failure(.invalidURL)
         }
         

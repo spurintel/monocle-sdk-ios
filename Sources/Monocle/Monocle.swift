@@ -16,10 +16,14 @@ public struct MonoclePluginOptions: OptionSet {
     }
 }
 
+/// Monocle configuration
+/// - Parameters:
+///   - token: Monocle site-token String unique to your deployment. From https://app.spur.us/monocle
+///   - enabledPlugins: Select what plugins are enabled, defaults to .all 
 public struct MonocleConfig {
     public let token: String
     public var enabledPlugins: MonoclePluginOptions
-
+    
     public init(token: String, enabledPlugins: MonoclePluginOptions = .all) {
         self.token = token
         self.enabledPlugins = enabledPlugins
@@ -31,6 +35,10 @@ public struct AssessmentResponse: Codable {
     public let status: String
 }
 
+/// Monocle class
+///  - Parameters:
+///    - config: MonocleConfig object instantiated with a site-token
+///  - Returns: AssessmentResponse object
 public class Monocle {
     public static let shared: Monocle = Monocle()
     
