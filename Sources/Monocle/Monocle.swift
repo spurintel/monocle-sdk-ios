@@ -43,44 +43,6 @@ public struct AssessmentResponse: Codable {
     public let status: String
 }
 
-public struct DecryptedAssessment: Codable {
-    /// Flag indicating whether or not this connection was detected to be originating from a VPN
-    public let vpn: Bool?
-    
-    /// Flag indicating whether or not this connection was detected to be originating from a proxy of any type (datacenter or residential)
-    public let proxied: Bool?
-    
-    /// Flag indicating whether or not this connection was detected to be originating from IP space known to host anonymizing infrastructure - this is a modifier to vpn and proxied and will never be true by itself
-    public let anon: Bool?
-    
-    /// Flag indicating whether or not this connection was detected to be originating from a remote desktop service
-    public let rdp: Bool?
-    
-    /// Flag indicating whether or not this connection was detected to be originating from a datacenter
-    public let dch: Bool?
-    
-    /// Country code of the source IP address (ISO 3166 ALPHA-2)
-    public let cc: String?
-    
-    /// Source IPv4 address as seen by Monocle
-    public let ip: String?
-    
-    /// If applicable, source IPv6 address as seen by Monocle
-    public let ipv6: String?
-    
-    /// ISO 8601 datetime format of the Monocle Assessment generation
-    public let ts: Date?
-    
-    /// Flag indicating if the Monocle process completed fully; a false value is indicative of a higher chance of false positives/negatives
-    public let complete: Bool?
-    
-    /// Unique Monocle-generated ID identifying the generated Monocle Assessment
-    public let id: String?
-    
-    /// Site ID, arbitrary ID provided by the user at time of Monocle Site Token generation
-    public let sid: String?
-}
-
 /// Monocle class
 ///  - Parameters:
 ///    - config: MonocleConfig object instantiated with a site-token
@@ -161,54 +123,6 @@ public class Monocle {
         case .failure(let error):
             print("Error posting bundle: \(error)")
             return AssessmentResponse(data: nil, status: error.localizedDescription)
-        }
-    }
-    
-    /// Decrypts the encrypted assessment data using the provided decryption token and parses it into a `DecryptedAssessment` struct.
-    ///
-    /// - Parameter encryptedData: The encrypted assessment data as a `String`.
-    /// - Returns: A `Result<DecryptedAssessment, Error>` containing the decrypted assessment or an error.
-    public func decryptAssessment(encryptedData: String) async -> Result<DecryptedAssessment, Error> {
-        guard let decryptionToken = Monocle.config?.decryptionToken, !decryptionToken.isEmpty else {
-            return .failure(NSError(domain: "MonocleErrorDomain", code: -1, userInfo: [NSLocalizedDescriptionKey: "Decryption token is not set"]))
-        }
-        
-        // Prepare the URL
-        guard let url = URL(string: "https://decrypt.mcl.spur.us/api/v1/assessment") else {
-            return .failure(NSError(domain: "MonocleErrorDomain", code: -2, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"]))
-        }
-        
-        // Create the request
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("text/plain; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        request.setValue(decryptionToken, forHTTPHeaderField: "TOKEN")
-        
-        // Set the encrypted data as the HTTP body
-        request.httpBody = encryptedData.data(using: .utf8)
-        
-        do {
-            // Perform the request
-            let (data, response) = try await URLSession.shared.data(for: request)
-            
-            // Check the response status code
-            if let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) {
-                // Decode the data into DecryptedAssessment
-                let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .iso8601 // Assuming the 'ts' field uses ISO 8601 format
-                
-                let decryptedAssessment = try decoder.decode(DecryptedAssessment.self, from: data)
-                
-                return .success(decryptedAssessment)
-            } else {
-                // Handle HTTP errors
-                let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
-                let errorDescription = HTTPURLResponse.localizedString(forStatusCode: statusCode)
-                return .failure(NSError(domain: "MonocleErrorDomain", code: statusCode, userInfo: [NSLocalizedDescriptionKey: errorDescription]))
-            }
-        } catch {
-            // Handle networking and decoding errors
-            return .failure(error)
         }
     }
     
