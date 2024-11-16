@@ -144,7 +144,7 @@ public class Monocle {
         
         print("sending data: \(jsonString)")
         
-        let bundlePoster = BundlePoster(v: "0.0.1", t: "iOS", s: installID.uuidString, tk: token)
+        let bundlePoster = BundlePoster(v: MonocleConstants.sdkVersion, t: MonocleConstants.platformType, s: installID.uuidString, tk: token)
         let postResult = await bundlePoster.postBundle(jsonBody: jsonString)
         switch postResult {
         case .success(let response):
