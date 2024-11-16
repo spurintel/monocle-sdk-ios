@@ -3,11 +3,26 @@ import UIKit
 
 public typealias EncryptedAssessment = String
 
+public struct MonoclePluginOptions: OptionSet {
+    public let rawValue: Int
+
+    public static let dns = MonoclePluginOptions(rawValue: 1 << 0)
+    public static let deviceInfo = MonoclePluginOptions(rawValue: 1 << 1)
+    public static let location = MonoclePluginOptions(rawValue: 1 << 2)
+    public static let all: MonoclePluginOptions = [.dns, .deviceInfo, .location]
+
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+}
+
 public struct MonocleConfig {
     public let token: String
-    
-    public init(token: String) {
+    public var enabledPlugins: MonoclePluginOptions
+
+    public init(token: String, enabledPlugins: MonoclePluginOptions = .all) {
         self.token = token
+        self.enabledPlugins = enabledPlugins
     }
 }
 
@@ -34,14 +49,22 @@ public class Monocle {
         guard let config = Monocle.config else {
             fatalError("Error - you must call setup before accessing Monocle.shared")
         }
-        
+
         token = config.token
         installID = UIDevice.current.identifierForVendor ?? UUID()
-        plugins = [
-            MonoclePlugin(v: "0.0.1", t: "iOS", s: installID.uuidString, tk: token, config: DnsResolverPlugin.dnsResolverMonoclePluginConfig),
-            MonoclePlugin(v: "0.0.1", t: "iOS", s: installID.uuidString, tk: token, config: DeviceInfoPlugin.deviceInfoPluginConfig),
-            MonoclePlugin(v: "0.0.1", t: "iOS", s: installID.uuidString, tk: token, config: LocationPlugin.locationPluginConfig),
-        ]
+        var pluginsList: [MonoclePlugin] = []
+
+        if config.enabledPlugins.contains(.dns) {
+            pluginsList.append(MonoclePlugin(v: "0.0.1", t: "iOS", s: installID.uuidString, tk: token, config: DnsResolverPlugin.dnsResolverMonoclePluginConfig))
+        }
+        if config.enabledPlugins.contains(.deviceInfo) {
+            pluginsList.append(MonoclePlugin(v: "0.0.1", t: "iOS", s: installID.uuidString, tk: token, config: DeviceInfoPlugin.deviceInfoPluginConfig))
+        }
+        if config.enabledPlugins.contains(.location) {
+            pluginsList.append(MonoclePlugin(v: "0.0.1", t: "iOS", s: installID.uuidString, tk: token, config: LocationPlugin.locationPluginConfig))
+        }
+
+        plugins = pluginsList
     }
     
     struct BundlePostData: Codable {
