@@ -26,12 +26,14 @@ public struct MonoclePluginOptions: OptionSet {
 ///   - token: Monocle site-token String unique to your deployment. From https://app.spur.us/monocle
 ///   - enabledPlugins: Select what plugins are enabled, defaults to .all
 ///   - decryptionToken: Optionally add your decryption token for decrypting data using a spur managed deployment
+///   - cpd (customer provided data): Optionally add your cpd for the assessment. This is customer provided data that will be included in the assessment response.
 public struct MonocleConfig {
     public let token: String
     public var enabledPlugins: MonoclePluginOptions
     public var decryptionToken: String?
+    public var cpd: String?
     
-    public init(token: String, enabledPlugins: MonoclePluginOptions = .all, decryptionToken: String? = nil) {
+    public init(token: String, enabledPlugins: MonoclePluginOptions = .all, decryptionToken: String? = nil, cpd: String? = nil) {
         self.token = token
         self.enabledPlugins = enabledPlugins
         self.decryptionToken = decryptionToken
@@ -106,7 +108,13 @@ public class Monocle {
         
         print("sending data: \(jsonString)")
         
-        let bundlePoster = BundlePoster(v: MonocleConstants.sdkVersion, t: MonocleConstants.platformType, s: installID.uuidString, tk: token)
+        let bundlePoster = BundlePoster(
+            v: MonocleConstants.sdkVersion,
+            t: MonocleConstants.platformType,
+            s: installID.uuidString,
+            tk: token,
+            cpd: Monocle.config?.cpd ?? "",
+        )
         let postResult = await bundlePoster.postBundle(jsonBody: jsonString)
         switch postResult {
         case .success(let response):

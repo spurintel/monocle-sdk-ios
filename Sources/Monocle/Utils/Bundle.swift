@@ -12,16 +12,18 @@ class BundlePoster {
     var t: String
     var s: String
     var tk: String
+    var cpd: String
     
-    init(v: String, t: String, s: String, tk: String) {
+    init(v: String, t: String, s: String, tk: String, cpd: String) {
         self.v = v
         self.t = t
         self.s = s
         self.tk = tk
+        self.cpd = cpd
     }
     
     func postBundle(jsonBody: String) async -> Result<String, BundlePosterError> {
-        guard let url = URL(string: "https://mcl.spur.us/r/bundle?v=\(v)&t=\(t)&s=\(s)&tk=\(tk)") else {
+        guard let url = URL(string: "https://mcl.spur.us/r/bundle?v=\(v)&t=\(t)&s=\(s)&tk=\(tk)&cpd=\(cpd)") else {
             return .failure(.invalidURL)
         }
         
