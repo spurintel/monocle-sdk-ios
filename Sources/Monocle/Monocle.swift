@@ -37,6 +37,7 @@ public struct MonocleConfig {
         self.token = token
         self.enabledPlugins = enabledPlugins
         self.decryptionToken = decryptionToken
+        self.cpd = cpd
     }
 }
 
@@ -115,6 +116,9 @@ public class Monocle {
             tk: token,
             cpd: Monocle.config?.cpd ?? "",
         )
+
+        print("bundlePoster: \(bundlePoster)")
+
         let postResult = await bundlePoster.postBundle(jsonBody: jsonString)
         switch postResult {
         case .success(let response):

@@ -27,6 +27,8 @@ class BundlePoster {
             return .failure(.invalidURL)
         }
         
+        print("posting bundle to \(url)")
+
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("text/plain;charset=UTF-8", forHTTPHeaderField: "Content-Type")
