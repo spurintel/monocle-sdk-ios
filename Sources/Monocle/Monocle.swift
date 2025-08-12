@@ -114,7 +114,7 @@ public class Monocle {
             t: MonocleConstants.platformType,
             s: installID.uuidString,
             tk: token,
-            cpd: Monocle.config?.cpd ?? "",
+            cpd: Monocle.config?.cpd ?? ""
         )
 
         print("bundlePoster: \(bundlePoster)")
