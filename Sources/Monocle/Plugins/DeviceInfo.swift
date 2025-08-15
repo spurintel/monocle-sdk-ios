@@ -19,15 +19,15 @@ struct DeviceInformation: Codable {
     let networkType: String
 }
 
-class DeviceInfoPlugin {
-    static let deviceInfoPluginConfig = MonoclePluginConfig(pid: "p/dios", version: 1, execute: gatherDeviceInformation)
-    
-    static func gatherDeviceInformation() async -> DeviceInformation {
+class DeviceInfoPlugin: MonoclePlugin {
+    static let deviceInfoPluginConfig = MonoclePluginConfig(pid: "p/dios", version: 1)
+
+    override func execute() async throws -> Codable {
         // First, asynchronously get the network type
-        let networkType = await getNetworkType()
-        
+        let networkType = await DeviceInfoPlugin.getNetworkType()
+
         // Now create and return the device information including the network type
-        return createDeviceInfo(withNetworkType: networkType)
+        return DeviceInfoPlugin.createDeviceInfo(withNetworkType: networkType)
     }
     
     private static func getNetworkType() async -> String {

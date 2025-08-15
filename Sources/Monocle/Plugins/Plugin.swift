@@ -1,14 +1,13 @@
 import Foundation
 
+// Simple config container for plugin metadata
 struct MonoclePluginConfig {
     let pid: String
     var version: Int
-    let execute: () async throws -> Codable
-    
-    init(pid: String, version: Int, execute: @escaping () async -> Codable) {
+
+    init(pid: String, version: Int) {
         self.pid = pid
         self.version = version
-        self.execute = execute
     }
 }
 
@@ -46,33 +45,36 @@ class MonoclePlugin {
     var t: String
     var s: String
     var tk: String
-    private let executeFunction: () async throws -> Codable
-    
-    init(v: String, t: String, s: String, tk: String, config: MonoclePluginConfig) {
-        self.pid = config.pid
-        self.executeFunction = config.execute
-        self.version = config.version
+
+    init(v: String, t: String, s: String, tk: String, pid: String, version: Int) {
+        self.pid = pid
+        self.version = version
         self.v = v
         self.t = t
         self.s = s
         self.tk = tk
     }
-    
+
+    // Subclasses should override this to perform their work and return Codable data
+    func execute() async throws -> Codable {
+        fatalError("Subclasses must override execute()")
+    }
+
     func trigger() async -> MonoclePluginResponse {
         let start = Date()
         var response = MonoclePluginResponse(pid: self.pid, version: self.version, start: start, end: nil, data: nil, error: nil)
-        
+
         do {
-            let data = try await executeFunction()
+            let data = try await execute()
             response.data = serialize(data: data)
         } catch {
             response.error = error.localizedDescription
         }
         response.end = Date()
-        
+
         return response
     }
-    
+
     func appendCommonQueryParameters(to components: inout URLComponents) {
         let commonParams = [
             URLQueryItem(name: "v", value: v),
@@ -80,7 +82,7 @@ class MonoclePlugin {
             URLQueryItem(name: "s", value: s),
             URLQueryItem(name: "tk", value: tk)
         ]
-        
+
         if components.queryItems == nil {
             components.queryItems = commonParams
         } else {

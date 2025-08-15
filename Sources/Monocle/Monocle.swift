@@ -74,13 +74,13 @@ public class Monocle {
         var pluginsList: [MonoclePlugin] = []
         
         if config.enabledPlugins.contains(.dns) {
-            pluginsList.append(MonoclePlugin(v: MonocleConstants.sdkVersion, t: MonocleConstants.platformType, s: installID.uuidString, tk: token, config: DnsResolverPlugin.dnsResolverMonoclePluginConfig))
+            pluginsList.append(DnsResolverPlugin(v: MonocleConstants.sdkVersion, t: MonocleConstants.platformType, s: installID.uuidString, tk: token, pid: DnsResolverPlugin.dnsResolverMonoclePluginConfig.pid, version: DnsResolverPlugin.dnsResolverMonoclePluginConfig.version))
         }
         if config.enabledPlugins.contains(.deviceInfo) {
-            pluginsList.append(MonoclePlugin(v: MonocleConstants.sdkVersion, t: MonocleConstants.platformType, s: installID.uuidString, tk: token, config: DeviceInfoPlugin.deviceInfoPluginConfig))
+            pluginsList.append(DeviceInfoPlugin(v: MonocleConstants.sdkVersion, t: MonocleConstants.platformType, s: installID.uuidString, tk: token, pid: DeviceInfoPlugin.deviceInfoPluginConfig.pid, version: DeviceInfoPlugin.deviceInfoPluginConfig.version))
         }
         if config.enabledPlugins.contains(.location) {
-            pluginsList.append(MonoclePlugin(v: MonocleConstants.sdkVersion, t: MonocleConstants.platformType, s: installID.uuidString, tk: token, config: LocationPlugin.locationPluginConfig))
+            pluginsList.append(LocationPlugin(v: MonocleConstants.sdkVersion, t: MonocleConstants.platformType, s: installID.uuidString, tk: token, pid: LocationPlugin.locationPluginConfig.pid, version: LocationPlugin.locationPluginConfig.version))
         }
         
         plugins = pluginsList

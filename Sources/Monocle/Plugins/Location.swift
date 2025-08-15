@@ -6,10 +6,10 @@ struct LocationData: Codable {
     let locationTimestamp: String?
 }
 
-class LocationPlugin {
-    static let locationPluginConfig = MonoclePluginConfig(pid: "p/li", version: 1, execute: gatherLocationInformation)
+class LocationPlugin: MonoclePlugin {
+    static let locationPluginConfig = MonoclePluginConfig(pid: "p/li", version: 1)
 
-    static func gatherLocationInformation() async -> Codable {
+    override func execute() async throws -> Codable {
         let locationManager = CLLocationManager()
 
         // Check if location services are enabled and if the app has permission to access location
@@ -19,11 +19,11 @@ class LocationPlugin {
                 // Try to get the location
                 let location = locationManager.location
 
-                // We can't get the location, return an error
+                // We can't get the location, return default
                 if location == nil {
                     return LocationData(latitude: 0, longitude: 0, locationTimestamp: nil)
                 } else {
-                    let timestamp = rfc3339Formatted(date: location?.timestamp ?? Date())
+                    let timestamp = LocationPlugin.rfc3339Formatted(date: location?.timestamp ?? Date())
                     return LocationData(
                             latitude: location?.coordinate.latitude ?? 0,
                             longitude: location?.coordinate.longitude ?? 0,

@@ -9,15 +9,26 @@ struct ResolverPluginStub: Codable {
 }
 
 class DnsResolverPlugin: MonoclePlugin {
-    static let dnsResolverMonoclePluginConfig = MonoclePluginConfig(pid: "p/dr", version: 1, execute: execute)
-    
-    static func execute() async -> Codable {
+    static let dnsResolverMonoclePluginConfig = MonoclePluginConfig(pid: "p/dr", version: 1)
+
+    override func execute() async throws -> Codable {
         let id = UUID().uuidString.lowercased().replacingOccurrences(of: "-", with: "")
         let subdomain = id
-        guard let url = URL(string: "https://\(subdomain).\(regionalDomain)/d/p?s=\(id)") else {
+
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "\(subdomain).\(regionalDomain)"
+        components.path = "/d/p"
+        // Preserve existing id parameter used for the subdomain/resolve
+        components.queryItems = [URLQueryItem(name: "s", value: id)]
+
+        // Append common Monocle query parameters using the instance properties
+        appendCommonQueryParameters(to: &components)
+
+        guard let url = components.url else {
             return ResolverPluginStub(ok: false, id: id, dns: nil)
         }
-        
+
         do {
             let (data, response) = try await URLSession.shared.data(from: url)
             guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200, let dns = String(data: data, encoding: .utf8) else {
