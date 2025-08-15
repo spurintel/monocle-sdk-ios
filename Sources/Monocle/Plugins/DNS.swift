@@ -21,6 +21,10 @@ class DnsResolverPlugin: MonoclePlugin {
         do {
             let (data, response) = try await URLSession.shared.data(from: url)
             guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200, let dns = String(data: data, encoding: .utf8) else {
+                print("HTTP Response: \(response)")
+                if let httpResponse = response as? HTTPURLResponse {
+                    print("HTTP Status Code: \(httpResponse.statusCode)")
+                }
                 return ResolverPluginStub(ok: false, id: id, dns: nil)
             }
             return ResolverPluginStub(ok: true, id: id, dns: dns)
