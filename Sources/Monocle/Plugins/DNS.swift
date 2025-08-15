@@ -1,6 +1,6 @@
 import Foundation
 
-let regionalDomain = "verify-use.spur.us" // Replace with your actual domain
+let regionalDomain = "verify-use.spur.us" // Default; may be overridden by runtime fetch
 
 struct ResolverPluginStub: Codable {
     var ok: Bool
@@ -11,13 +11,34 @@ struct ResolverPluginStub: Codable {
 class DnsResolverPlugin: MonoclePlugin {
     static let dnsResolverMonoclePluginConfig = MonoclePluginConfig(pid: "p/dr", version: 1)
 
+    // Fetch the regional domain from the control endpoint on every call, falling back to `regionalDomain` on error
+    static func fetchRegionalDomain() async -> String {
+        guard let url = URL(string: "https://mcl.spur.us/region") else {
+            return regionalDomain
+        }
+
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            if let regionString = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines), !regionString.isEmpty {
+                print("found regional domain: \(regionString)")
+                return regionString
+            }
+        } catch {
+            // ignore error and fall back
+        }
+
+        return regionalDomain
+    }
+
     override func execute() async throws -> Codable {
         let id = UUID().uuidString.lowercased().replacingOccurrences(of: "-", with: "")
         let subdomain = id
 
+        let region = await DnsResolverPlugin.fetchRegionalDomain()
+
         var components = URLComponents()
         components.scheme = "https"
-        components.host = "\(subdomain).\(regionalDomain)"
+        components.host = "\(subdomain).\(region)"
         components.path = "/d/p"
         // Preserve existing id parameter used for the subdomain/resolve
         components.queryItems = [URLQueryItem(name: "s", value: id)]
