@@ -1,6 +1,6 @@
 import Foundation
 
-let regionalDomain = "verify-use.spur.dev" // Replace with your actual domain
+let regionalDomain = "verify-use.spur.us" // Replace with your actual domain
 
 struct ResolverPluginStub: Codable {
     var ok: Bool
