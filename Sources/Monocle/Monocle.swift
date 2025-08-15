@@ -94,6 +94,7 @@ public class Monocle {
         var pluginResults: [MonoclePluginResponse] = []
         for plugin in self.plugins {
             let result = await plugin.trigger()
+            print("result: \(result)")
             pluginResults.append(result)
         }
         
